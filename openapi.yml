@@ -82,9 +82,11 @@ components:
           items:
             type: array
             items:
-              type: number
-            minItems: 2
-            maxItems: 2
+              oneOf: 
+                - $ref: '#/components/schemas/lat'
+                - $ref: '#/components/schemas/lng'
+            minItems: 3
+            maxItems: 30
         interpolate:
           type: boolean
           default: false
@@ -216,12 +218,11 @@ components:
           EconID:
             type: string
             example: B_NONE_800_1.5_1.0
-    LatLng:
-      type: object
-      properties:
-        lat: 
-          type: number
-          format: float
-        lng: 
-          type: number
-          format: float
+    lat: 
+      type: number
+      format: float
+      pattern: '^(\+|-)?(?:90(?:(?:\.0{1,7})?)|(?:[0-9]|[1-8][0-9])(?:(?:\.[0-9]{1,7})?))$'
+    lng: 
+      type: number
+      format: float
+      pattern: '^(\+|-)?(?:180(?:(?:\.0{1,7})?)|(?:[0-9]|[1-9][0-9]|1[0-7][0-9])(?:(?:\.[0-9]{1,7})?))$'
