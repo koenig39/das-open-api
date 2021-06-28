@@ -1,0 +1,227 @@
+openapi: '3.0.2'
+info:
+  title: DAS
+  version: '0.0.1'
+  description: DAS function API
+  termsOfService: http://siros.tech/api/termsofservice
+  contact:
+    name: Siros Technologies
+    url: http://siros.tech
+    email: apotapov@cirostechnologies.com
+  license:
+    name: License
+    url: http://siros.tech/api/license
+tags:
+  - name: DAS
+    description: main function
+servers:
+  - url: https://outdoor-toilet.azurewebsites.net/api
+    description: Live Server
+  - url: https://api.server.test/v1
+    description: Demo API
+security:
+  - ApiKeyAuth: []
+paths:
+  /OutdoorToilet:
+    post:
+      tags:
+        - DAS
+      summary: Returns calculated values for the polygon
+      description: detailed descriptopn with CommonMark syntax
+      operationId: siros.das
+      requestBody:
+        description: 'JSON object with polygon coordinates, interpolation options and formation sets'
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/das'
+      responses:
+        200:
+          description: 'OK - new DAS data' 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/formationData'
+        400:
+          description: "Invalid request"
+        401:
+          description: "Unable to authenticate"
+        402: 
+          description: "Valid request but quota exceeded"
+        403: 
+          description: "Forbidden"
+        404:
+          description: "Invalid API endpoint"
+        405:
+          description: "Method not allowed"
+        408:
+          description: "Timeout; you can try again"            
+        410: 
+          description: "Request too long"
+        426:
+          description: "Upgrade required"
+        429: 
+          description: "Too many requests"
+        503:
+          description: "Internal server error"
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      description: Azure function API Key
+      type: apiKey
+      name: code
+      in: query
+  schemas:
+    das:
+      type: object
+      properties:
+        polygon:
+          type: array
+          nullable: false
+          items:
+            type: array
+            items:
+              type: number
+            minItems: 2
+            maxItems: 2
+        interpolate:
+          type: boolean
+          default: false
+        resolution:
+          type: integer
+          default: 1
+          nullable: false
+        formations:
+          type: array
+          nullable: false
+          items:
+            type: object
+            properties:
+              set:
+                type: array
+                items:
+                  type: string
+              dominant:
+                type: string
+              name:
+                type: string
+      example:
+        interpolate: false
+        resolution: 25
+        polygon: [
+                  [-103.49627112476425,48.21248409008072],
+                  [-103.50047222281304,48.21234414706957],
+                  [-103.51787282877659,48.21226423257207],
+                  [-103.51787262997496,48.22676368113434],
+                  [-103.50037201184976,48.226813880714126],
+                  [-103.49627092361003,48.226854029678464],
+                  [-103.49627112476425,48.21248409008072]
+                ]
+        formations: [
+                      {"set":["UB","MB","LB"],"dominant":"MB","name":"B"},
+                      {"set":["TF1"],"dominant":"TF1","name":"TF1"},
+                      {"set":["TF2"],"dominant":"TF2","name":"TF2"}
+                    ]
+    formationData:
+      type: object
+      properties:
+          Structure:
+            description: descr
+            type: number
+            format: float
+            example: -8618.435090905778
+          Isopach:
+            type: number
+            format: float
+            example: 82.89619951610787
+          OIP:
+            type: number
+            format: float
+            description: 'Oil in place. The volume of oil held in a reservoir in the subsurface. Not all of this oil can be recovered.'
+            example: 21446.51746746174
+          GOR:
+            type: number
+            format: float
+            description: 'Gas/oil ratio. The volume of dissolved gas per barrel of oil.'
+            example: 1.4006417497154062
+          WOR:
+            type: number
+            format: float
+            description: 'Water/Oil ratio. The ratio of produced water to produced oil'
+            example: 1.0
+          WaterCut:
+            type: number
+            format: float
+            description: 'The ratio of water produced compared to the volume of total liquids produced'
+            example: 1.4006417497154062
+          Pressure:
+            type: number
+            format: float
+            example: 0.6951861815618121
+          MBOE:
+            type: number
+            format: float
+            description: Thousand of Barrels of Oil Equivalent
+            example: 984.6557147949079
+          EUROIL:
+            type: number
+            format: float
+            example: 791.5838291576575
+          6 mo OIL CUM:
+            type: number
+            format: float
+            example: 120018.95662157389
+          12 mo OIL CUM:
+            type: number
+            format: float
+            example: 172756.23315679943
+          Porosity:
+            type: number
+            format: float
+            description: 'Porosity is the measure of a rock’s ability to hold the hydrocarbons it contains (i.e., oil, gas, water, and condensates).Porosity represents the percentage of the pores or void spaces in sandstones. In mathematical terms it can be expressed as open voids in the sandstone rocks divided by the total rock volume. The total rock volume is equal to the solid volume of rock and porous volume of the rock. A sandstone rock generally has 8% porosity which means that the 92% of its portion is solid rock and only 8% has the void spaces which may hold the hydrocarbons in it. [Link](https://www.petropedia.com/definition/2970/porosity)'
+            example: 0.07279051552861479
+          Sw:
+            type: number
+            format: float
+            description: 'water saturation [Link](https://glossary.oilfield.slb.com/en/terms/w/water_saturation)'
+            example: 0.38775705980163855
+          OOIP_MSTB:
+            type: number
+            format: float
+            description: 'original-oil-in-place, Thousand Stock Tank Barrels'
+            example: 118.02446215965205
+          OOIP_MBOE:
+            type: number
+            format: float
+            description: 'original-oil-in-place, Thousand of Barrels of Oil Equivalent.'
+            example: 154.6681764297728
+          OGIP_MMCF:
+            type: number
+            format: float
+            description: 'original gas-in-place, one million cubic feet under prescribed conditions of pressure and temperature and represents the basic unit for measuring the production of natural gas'
+            example: 165.3099891885148
+          LiquidsPerc:
+            type: number
+            format: float
+            example: 0.8913382445216195
+          Rec_OOIP_MSTB:
+            type: number
+            format: float
+            example: 23.60489243193041
+          Rec_OOIP_MBOE:
+            type: number
+            format: float
+            example: 30.933635285954566
+          EconID:
+            type: string
+            example: B_NONE_800_1.5_1.0
+    LatLng:
+      type: object
+      properties:
+        lat: 
+          type: number
+          format: float
+        lng: 
+          type: number
+          format: float
