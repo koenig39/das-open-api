@@ -14,14 +14,33 @@ info:
 tags:
   - name: DAS
     description: main function
+  - name: Formations
+    description: returns the full list of the formations
 servers:
   - url: https://outdoor-toilet.azurewebsites.net/api
     description: Live Server
+  - url: https://us-central1-kovrovo-bread.cloudfunctions.net/getFOrmations
+    description: returns the full list of formations
   - url: https://api.server.test/v1
     description: Demo API
 security:
   - ApiKeyAuth: []
 paths:
+  /formations:
+    get:
+      tags:
+        - Formations
+      summary: returns the list of all formations
+      operationId: google.cloudFunc.getFormations
+      responses:
+        200:
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/formations"
   /OutdoorToilet:
     post:
       tags:
@@ -73,6 +92,25 @@ components:
       name: code
       in: query
   schemas:
+    formations:
+      type: object
+      properties:
+        id:
+          type: number
+          format: integer
+          description: 'formation ID and order number'
+          example: 1
+        name: 
+          type: string
+          description: 'formation name'
+          example: ' EXAMPLE formation #1 - UPPER BUCKET'
+        description: 
+          type: string
+          description: 'detailed information'
+          example: 'example description'
+        isDominant:
+          type: boolean
+          description: can formation be used as DOMINANT
     das:
       type: object
       properties:
@@ -85,8 +123,8 @@ components:
               oneOf: 
                 - $ref: '#/components/schemas/lat'
                 - $ref: '#/components/schemas/lng'
-            minItems: 3
-            maxItems: 30
+          minItems: 3
+          maxItems: 30
         interpolate:
           type: boolean
           default: false
