@@ -38,9 +38,10 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/formations"
+                type: object
+                properties: {}
+                # items:
+                  # $ref: "#/components/schemas/formation"
   /OutdoorToilet:
     post:
       tags:
@@ -92,7 +93,7 @@ components:
       name: code
       in: query
   schemas:
-    formations:
+    formation:
       type: object
       properties:
         id:
