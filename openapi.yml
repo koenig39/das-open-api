@@ -2,10 +2,10 @@ openapi: '3.0.2'
 info:
   title: DAS
   version: '0.0.1'
-  description: DAS function API
+  description: DAS function API
   termsOfService: http://siros.tech/api/termsofservice
   contact:
-    name: Siros Technologies
+    name: Siros Technologies
     url: http://siros.tech
     email: apotapov@cirostechnologies.com
   license:
