@@ -19,14 +19,12 @@ tags:
 servers:
   - url: https://outdoor-toilet.azurewebsites.net/api
     description: Live Server
-  - url: https://us-central1-kovrovo-bread.cloudfunctions.net/getFOrmations
-    description: returns the full list of formations
   - url: https://api.server.test/v1
     description: Demo API
 security:
   - ApiKeyAuth: []
 paths:
-  /formations:
+  /getFOrmations:
     get:
       tags:
         - Formations
@@ -34,14 +32,39 @@ paths:
       operationId: google.cloudFunc.getFormations
       responses:
         200:
-          description: ok
+          description: OK
           content:
             application/json:
               schema:
-                type: object
-                properties: {}
-                # items:
-                  # $ref: "#/components/schemas/formation"
+                type: array
+                items:
+                    $ref: "#/components/schemas/formation"
+              example:
+                1: 
+                    id: 1
+                    name: "UB"
+                    description: "UPPER BUKKEN"
+                    isDominant: false
+                2: 
+                    id: 2
+                    name: "MB"
+                    description: "MIDDLE BUKKEN"
+                    isDominant: true
+                3: 
+                    id: 3
+                    name: "LB"
+                    description: "LOWER BUKKEN"
+                    isDominant: false
+                4: 
+                    id: 4
+                    name: "TF1"
+                    description: "TREE FORKS 1"
+                    isDominant: true      
+                5: 
+                    id: 5
+                    name: "TF2"
+                    description: "TREE FORKS 2"
+                    isDominant: true  
   /OutdoorToilet:
     post:
       tags:
@@ -100,18 +123,14 @@ components:
           type: number
           format: integer
           description: 'formation ID and order number'
-          example: 1
         name: 
           type: string
           description: 'formation name'
-          example: ' EXAMPLE formation #1 - UPPER BUCKET'
         description: 
           type: string
           description: 'detailed information'
-          example: 'example description'
         isDominant:
           type: boolean
-          description: can formation be used as DOMINANT
     das:
       type: object
       properties:
